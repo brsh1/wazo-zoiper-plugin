@@ -1,0 +1,40 @@
+<!doctype html>
+<html>
+  <head>
+    <link href="./zoiper-plugin.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>Zoiper OEM Integration</h1>
+      <form id="zoiper-form">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" placeholder="Enter username" />
+        
+        <label for="password">Password:</label>
+        <input type="text" id="password" name="password" placeholder="Enter password" />
+
+        <label for="host">Host:</label>
+        <input type="text" id="host" name="host" placeholder="Enter host (optional)" />
+
+        <label for="proxy">Outbound Proxy:</label>
+        <input type="text" id="proxy" name="proxy" placeholder="Enter proxy (optional)" />
+
+        <label for="transport">Transport:</label>
+        <select id="transport" name="transport">
+          <option value="0">UDP</option>
+          <option value="1">TCP</option>
+          <option value="2">TLS</option>
+        </select>
+
+        <button type="submit">Generate QR Code</button>
+      </form>
+      
+      <div id="qr-code">
+        <h2>QR Code:</h2>
+        <img id="qr-image" src="" alt="QR Code will appear here" />
+      </div>
+    </div>
+    <script type="module" src="./zoiper-plugin.js"></script>
+  </body>
+</html>
+

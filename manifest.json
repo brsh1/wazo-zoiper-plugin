@@ -1,0 +1,16 @@
+{
+  "name": "Zoiper OEM Integration",
+  "version": "1.0.0",
+  "description": "Integrates Zoiper OEM QR generation into Wazo.",
+  "author": "Lev Bershadsky lev@brsh.co",
+  "productType": "app",
+  "staticTabs": [
+    {
+      "entityId": "zoiper-plugin-tab",
+      "context": ["generalTab"],
+      "name": "Mobile Sync",
+      "contentUrl": "./index.html"
+    }
+  ]
+}
+
