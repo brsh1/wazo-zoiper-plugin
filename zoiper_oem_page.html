@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mobile Sync</title>
+</head>
+<body>
+  <h2>QR Code Generator</h2>
+  <form id="zoiperForm" action="#" method="GET">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="u"><br><br>
+    
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="p"><br><br>
+
+    <label for="host">Host:</label>
+    <input type="text" id="host" name="h"><br><br>
+
+    <label for="outbound_proxy">Outbound Proxy:</label>
+    <input type="text" id="outbound_proxy" name="o"><br><br>
+
+    <label for="provisioning_server">Provisioning Server:</label>
+    <input type="text" id="provisioning_server" name="x"><br><br>
+
+    <label for="transport">Transport Type:</label>
+    <select id="transport" name="tr">
+      <option value="0">UDP</option>
+      <option value="1">TCP</option>
+      <option value="2">TLS</option>
+    </select><br><br>
+
+    <button type="submit">Generate QR Code</button>
+  </form>
+
+  <hr>
+
+  <h3>QR Code:</h3>
+  <img id="qrCodeImage" src="" alt="QR Code will be displayed here"/>
+
+  <script>
+    document.getElementById("zoiperForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      // Capture form data
+      const username = document.getElementById("username").value;
+      const password = document.getElementById("password").value;
+      const host = document.getElementById("host").value;
+      const outboundProxy = document.getElementById("outbound_proxy").value;
+      const provisioningServer = document.getElementById("provisioning_server").value;
+      const transport = document.getElementById("transport").value;
+
+      // Construct the URL for the QR code generation
+      let qrCodeUrl = "https://oem.zoiper.com/qr.php?provider_id=707e2a65c6e1940df6af87424d1ce910";
+      if (username) qrCodeUrl += `&u=${username}`;
+      if (password) qrCodeUrl += `&p=${password}`;
+      if (host) qrCodeUrl += `&h=${host}`;
+      if (outboundProxy) qrCodeUrl += `&o=${outboundProxy}`;
+      if (provisioningServer) qrCodeUrl += `&x=${provisioningServer}`;
+      if (transport) qrCodeUrl += `&tr=${transport}`;
+
+      // Update the QR code image
+      document.getElementById("qrCodeImage").src = qrCodeUrl;
+    });
+  </script>
+</body>
+</html>
+
