@@ -1,66 +1,208 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Mobile Sync</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Code Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f4f9ff;
+            position: relative;
+        }
+        h2 {
+            color: #333;
+        }
+        form {
+            max-width: 360px;
+            margin: auto;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #555;
+        }
+        input, select {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        
+        }
+        hr {
+            margin-top: 20px;
+        }
+        img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: auto;
+        }
+        
+        .rtl {
+            direction: rtl;
+            text-align: right;
+        }
+        #languageSelector {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+                }
+        #languageSelector button {
+            width: auto;
+            padding: 5px;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+        }
+        #languageSelector img {
+            height: 20px; /* Set a fixed size for flag images */
+        }
+        #qrCodeImage {
+            display: block;
+        }
+    </style>
 </head>
 <body>
-  <h2>QR Code Generator</h2>
-  <form id="zoiperForm" action="#" method="GET">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="u"><br><br>
+    <div id="languageSelector">
+        <button onclick="setLanguage('en')"><img src="https://flagcdn.com/h40/us.png" alt="English"></button>
+        <button onclick="setLanguage('he')"><img src="https://flagcdn.com/h40/il.png" alt="Hebrew"></button>
+    </div>
     
-    <label for="password">Password:</label>
-    <input type="text" id="password" name="p"><br><br>
+    <h2 id="formTitle"></h2>
+    <form id="qrForm">
+        <label for="username" id="usernameLabel"></label>
+        <input type="text" id="username" name="u" placeholder="">
+            
+        <label for="host" id="hostLabel"></label>
+        <input type="text" id="host" name="h" placeholder="sip-il3.brsh.co">
 
-    <label for="host">Host:</label>
-    <input type="text" id="host" name="h"><br><br>
+        <label for="password" id="passwordLabel"></label>
+        <input type="password" id="password" name="p" placeholder="">
+        
+        <label for="outbound_proxy" id="outboundProxyLabel"></label>
+        <input type="text" id="outbound_proxy" name="o" placeholder="">
+            
+        <label for="token" id="tokenLabel"></label>
+        <input type="text" id="token" name="t" placeholder="">
+            
+        <label for="authusername" id="authusernameLabel"></label>
+        <input type="text" id="authusername" name="a" placeholder="">
+            
+        <label for="transport" id="transportLabel"></label>
+        <select id="transport" name="tr">
+            <option value="0">UDP</option>
+            <option value="1">TCP</option>
+            <option value="2">TLS</option>
+        </select>
 
-    <label for="outbound_proxy">Outbound Proxy:</label>
-    <input type="text" id="outbound_proxy" name="o"><br><br>
+        <button type="submit" id="submitButton">Generate QR Code</button>
+    </form>
 
-    <label for="provisioning_server">Provisioning Server:</label>
-    <input type="text" id="provisioning_server" name="x"><br><br>
+    <hr>
 
-    <label for="transport">Transport Type:</label>
-    <select id="transport" name="tr">
-      <option value="0">UDP</option>
-      <option value="1">TCP</option>
-      <option value="2">TLS</option>
-    </select><br><br>
+    <h3 id="qrTitle"></h3>
+    <img id="qrCodeImage" src="" alt="QR Code will be displayed here">
 
-    <button type="submit">Generate QR Code</button>
-  </form>
+    <script>
+        const translations = {
+            en: {
+                formTitle: "BRSH Instant Connect",
+                usernameLabel: "Username:",
+                hostLabel: "Host:",
+                passwordLabel: "Password:",
+                outboundProxyLabel: "Outbound Proxy:",
+                tokenLabel: "Token (Optional)",
+                authusernameLabel:  "Auth username (usually same as username):",
+                transportLabel: "Transport Type:",
+                submitButton: "Generate QR Code",
+                qrTitle: "QR Code:"
+            },
+            he: {
+                formTitle: "חיבור ברגע - ברשדסקי",
+                usernameLabel: "שם משתמש ",
+                hostLabel: "שרת מרכזיה ",
+                passwordLabel: "סיסמה ",
+                outboundProxyLabel: "פרוקסי (לא חובה) ",
+                tokenLabel: "טוקן - לא חובה",
+                authusernameLabel: "שם משתמש לרישום",
+                transportLabel: "פרוטוקול ",
+                submitButton: "תחבר אותי",
+                qrTitle: "ברקוד "
+            }
+        };
+        function setLanguage(lang) {
+            document.getElementById("formTitle").textContent = translations[lang].formTitle;
+            document.getElementById("usernameLabel").textContent = translations[lang].usernameLabel;
+            document.getElementById("hostLabel").textContent = translations[lang].hostLabel;
+            document.getElementById("passwordLabel").textContent = translations[lang].passwordLabel;
+            document.getElementById("outboundProxyLabel").textContent = translations[lang].outboundProxyLabel; // Corrected ID
+            document.getElementById("tokenLabel").textContent = translations[lang].tokenLabel;
+            document.getElementById("authusernameLabel").textContent = translations[lang].authusernameLabel;
+            document.getElementById("transportLabel").textContent = translations[lang].transportLabel;
+            document.getElementById("submitButton").textContent = translations[lang].submitButton;
+            document.getElementById("qrTitle").textContent = translations[lang].qrTitle;
 
-  <hr>
+            if (lang === 'he') {
+                document.body.classList.add('rtl');
+            } else {
+                document.body.classList.remove('rtl');
+            }
+        }
 
-  <h3>QR Code:</h3>
-  <img id="qrCodeImage" src="" alt="QR Code will be displayed here"/>
 
-  <script>
-    document.getElementById("zoiperForm").addEventListener("submit", function(event) {
-      event.preventDefault();
+        function populateForm(urlParams) {
+               for (const [key, value] of urlParams.entries()) {
+                   const input = document.querySelector(`input[name="${key}"]`);
+                   if (input && value !== undefined) {  // Check that key exists and has a non-empty value
+                       input.value = decodeURIComponent(value);
+                   }
+               }
+           }
+        setLanguage('he');
+        const urlParams = new URLSearchParams(window.location.search);
+        populateForm(urlParams);
 
-      // Capture form data
-      const username = document.getElementById("username").value;
-      const password = document.getElementById("password").value;
-      const host = document.getElementById("host").value;
-      const outboundProxy = document.getElementById("outbound_proxy").value;
-      const provisioningServer = document.getElementById("provisioning_server").value;
-      const transport = document.getElementById("transport").value;
+        document.getElementById("qrForm").addEventListener("submit", function(event) {
+            event.preventDefault();
 
-      // Construct the URL for the QR code generation
-      let qrCodeUrl = "https://oem.zoiper.com/qr.php?provider_id=707e2a65c6e1940df6af87424d1ce910";
-      if (username) qrCodeUrl += `&u=${username}`;
-      if (password) qrCodeUrl += `&p=${password}`;
-      if (host) qrCodeUrl += `&h=${host}`;
-      if (outboundProxy) qrCodeUrl += `&o=${outboundProxy}`;
-      if (provisioningServer) qrCodeUrl += `&x=${provisioningServer}`;
-      if (transport) qrCodeUrl += `&tr=${transport}`;
+            const formData = new FormData(this);
+            const queryParams = new URLSearchParams(formData).toString();
+            let qrCodeUrl = `https://oem.zoiper.com/qr.php?provider_id=707e2a65c6e1940df6af87424d1ce910&${queryParams}`;
 
-      // Update the QR code image
-      document.getElementById("qrCodeImage").src = qrCodeUrl;
-    });
-  </script>
+            const qrCodeImage = document.getElementById("qrCodeImage");
+                qrCodeImage.src = qrCodeUrl;
+                qrCodeImage.style.display = "block"; // Ensure the image is visible
+                qrCodeImage.onload = function() {
+                        qrCodeImage.scrollIntoView({
+                            behavior: "smooth", // Smooth scrolling effect
+                            block: "center"     // Align the QR code at the center of the viewport
+                        });
+                    };
+                });
+    </script>
 </body>
 </html>
 
